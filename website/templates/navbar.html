@@ -1,28 +1,33 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'Home' %}">מועמדים הראל</a>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1f047a;">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'Home' %}" style="direction: rtl;">
+        <span style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/> 
+          </svg></span>
+            מועמדים הראל</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="direction: rtl;">
 
-          {% if user.is_authenticated %}
-
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-          </li>
-
-          {% else %}
-    <li class="nav-item">
-            <a class="nav-link" href="{% url 'Home' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
-          </li>
-          {% endif %}
-        </ul>
-      </ul>
+              {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">התנתקות</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add_record' %}">הוספת מועמד</a>
+                </li>
+              {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'Home' %}">התחברות</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'register' %}">הרשמה</a>
+                  </li>
+              {% endif %}
+          </ul>
       </div>
-    </div>
-  </nav>
+  </div>
+</nav>

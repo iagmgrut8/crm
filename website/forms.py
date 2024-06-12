@@ -1,20 +1,20 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+from django import forms
+from .models import Record, status_choices, SOURCE_CHOICES
+from datetime import datetime
 
 class SignUpForm(UserCreationForm):
-    email = forms.forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Adress'}))
-    first_name = forms.forms.CharField(label="", max_lenght=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
-    last_name = forms.CharField(label="", max_lenght=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
-    
+    email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
+    first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+    last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
     
     class Meta:
-            model = User
-            fields = ('username', 'first_name', 'last_name', 'email', 'paswword1', 'password2')
-            
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+    
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
-
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['username'].widget.attrs['placeholder'] = 'User Name'
         self.fields['username'].label = ''
@@ -28,4 +28,50 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].label = ''
-        self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'	
+        self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+    format = '%d/%m/%Y'
+    
+    def __init__(self, *args, **kwargs):
+        kwargs['format'] = self.format
+        super().__init__(*args, **kwargs)
+    
+    def format_value(self, value):
+        if value is not None:
+            return value.strftime(self.format)
+        return super().format_value(value)
+
+class AddRecordForm(forms.ModelForm):
+    first_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"שם פרטי", "class":"form-control"}), label="")
+    last_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"שם משפחה", "class":"form-control"}), label="")
+    phone = forms.IntegerField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"טלפון", "class":"form-control"}), label="")
+    date_of_interview = forms.DateField(required=True, widget=DateInput(attrs={"placeholder":"תאריך ראיון", "class":"form-control"}), label="")
+    hour_of_interview = forms.TimeField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"שעת ראיון", "class":"form-control"}), label="")
+    source = forms.ChoiceField(
+        choices=SOURCE_CHOICES,
+        required=True,
+        widget=forms.Select(attrs={
+            "class": "form-control",
+        }), label=""
+    )
+    status = forms.ChoiceField(
+        choices=status_choices,
+        required=True,
+        widget=forms.Select(attrs={
+            "class": "form-control",
+        }), label="סטטוס"
+    )
+    notes = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"הערות", "class":"form-control"}), label="")
+    
+    class Meta:
+        model = Record
+        exclude = ('user',)
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+    widget = DateInput(attrs={
+        "placeholder": "תאריך ראיון",
+        "class": "form-control"
+    })

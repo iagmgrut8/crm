@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .badge-primary { background-color: #007bff; }
+    .badge-secondary { background-color: #6c757d; }
+    .badge-success { background-color: #28a745; }
+    .badge-danger { background-color: #dc3545; }
+    .badge-warning { background-color: #ffc107; }
+    .badge-info { background-color: #17a2b8; }
+    .badge-light { background-color: #f8f9fa; color: #212529; }
+    .badge-dark { background-color: #343a40; }
+    .badge { color: white; padding: 0.5em 0.75em; border-radius: 0.25em; }
+</style>
+
+<div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
+    <h1>פרטי מועמד</h1>
+</div>
+
+<div class="card" style="width: 18rem;">
+    <div class="card-header">
+      פרטי מועמד:
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>מסד:</strong> {{ costumer_record.id }}</li>
+        <li class="list-group-item"><strong>שם מועמד:</strong> {{ costumer_record.first_name }} {{ costumer_record.last_name }}</li>
+        <li class="list-group-item"><strong>טלפון:</strong> {{ costumer_record.phone }}</li>
+        <li class="list-group-item"><strong>מקור גיוס:</strong> {{ costumer_record.source }}</li>
+        <li class="list-group-item"><strong>סטטוס:</strong>
+            {% if costumer_record.status == 'זומן' %}
+                <span class="badge badge-primary">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'התקבל' %}
+                <span class="badge badge-success">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'לא התקבל' %}
+                <span class="badge badge-danger">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'הסיר מועמדות' %}
+                <span class="badge badge-secondary">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'פסל' %}
+                <span class="badge badge-warning">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'מבדק אמינות' %}
+                <span class="badge badge-info">{{ costumer_record.status }}</span>
+            {% elif costumer_record.status == 'קבט' %}
+                <span class="badge badge-dark">{{ costumer_record.status }}</span>
+            {% else %}
+                <span class="badge badge-light">{{ costumer_record.status }}</span>
+            {% endif %}
+        </li>
+        <li class="list-group-item"><strong>תאריך ראיון:</strong> {{ costumer_record.date_of_interview }}</li>
+        <li class="list-group-item"><strong>שעת ראיון:</strong> {{ costumer_record.hour_of_interview }}</li>
+        
+    </ul>
+  </div>
+<br/>
+  <a href="{% url 'Home' %}" class="btn btn-secondary">עמוד ראשי</a>
+
+  <a href="{% url 'delete_record' costumer_record.id %}" class="btn btn-danger">מחיקה</a>
+
+{% comment "" %}{{ costumer_record.id }} </br>
+{{ costumer_record.first_name }} {{ record.last_name }} </br>
+{{ costumer_record.phone }} </br>
+{{ costumer_record.source }} </br>
+    {% if costumer_record.status == 'זומן' %}
+        <span class="badge badge-primary">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'התקבל' %}
+        <span class="badge badge-success">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'לא התקבל' %}
+        <span class="badge badge-danger">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'הסיר מועמדות' %}
+        <span class="badge badge-secondary">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'פסל' %}
+        <span class="badge badge-warning">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'מבדק אמינות' %}
+        <span class="badge badge-info">{{ costumer_record.status }}</span>
+    {% elif costumer_record.status == 'קבט' %}
+        <span class="badge badge-dark">{{ costumer_record.status }}</span>
+    {% else %}
+        <span class="badge badge-light">{{ costumer_record.status }}</span>
+    {% endif %} </br>
+{{ costumer_record.date_of_interview }} </br>
+{{ costumer_record.hour_of_interview }} </br>
+{{ costumer_record.notes }} </br>
+{% endcomment %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
+    <h1>טופס הוספת מועמד</h1>
+</div>
+
+<form method="POST" action="{% url 'add_record' %}">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">יצירה</button>
+</form>
+
+{% endblock %}

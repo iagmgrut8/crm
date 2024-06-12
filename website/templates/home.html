@@ -2,34 +2,107 @@
 
 {% block content %}
 
-<div class="col-md-6 offset-md-3">
+<style>
+    .text-right {
+        text-align: right;
+    }
+    .table {
+        direction: rtl;
+    }
+    .table th, .table td {
+        text-align: right;
+    }
+    .table thead th {
+        background-color: #236ee8; /* Header background color */
+        color: white; /* Text color for header */
+    }
+    .table-hover tbody tr:hover {
+        background-color: #e0e0e0; /* Hover effect color */
+    }
+    .badge-primary { background-color: #007bff; }
+    .badge-secondary { background-color: #6c757d; }
+    .badge-success { background-color: #28a745; }
+    .badge-danger { background-color: #dc3545; }
+    .badge-warning { background-color: #ffc107; }
+    .badge-info { background-color: #17a2b8; }
+    .badge-light { background-color: #f8f9fa; color: #212529; }
+    .badge-dark { background-color: #343a40; }
+    .badge { color: white; padding: 0.5em 0.75em; border-radius: 0.25em; }
+
+</style>
 
 {% if user.is_authenticated %}
-
-<h1> Login </h1>
-
-{% else %}
-
-<h1> Index </h1>
+<div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
+    <h1>רשימת מועמדים</h1>
+</div>
 <br/>
-
-<form method="POST" action="{% url 'Home' %}">
-{% csrf_token %}
-<form>
-    <div class="mb-3">
-      <input type -"text" class="form-control" name="user_name", placeholder="User Name" required>
-    </div>
-    <div class="mb-3">
-      <input type="password" class="form-control" name="password" placeholder="password" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-
-</form>
-
-</div> 
-
+    <table class="table table-light table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">שם מועמד</th>
+                <th scope="col">טלפון</th>
+                <th scope="col">מקור גיוס</th>
+                <th scope="col">סטטוס</th>
+                <th scope="col">מועד ראיון</th>
+                <th scope="col">שעת ראיון</th>
+                <th scope="col">הערות</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for record in records %}
+                <tr>
+                    <td><a class="icon-link" href="{% url 'record' record.id %}">
+                        <i class="bi bi-person"></i>
+                        <svg class="bi" aria-hidden="true"><use xlink:href="#box-seam"></use></svg>
+                        {{ record.id }}
+                      </a></td>
+                    {% comment %}
+                   <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
+                    {% endcomment %}
+                    <td>{{ record.first_name }} {{ record.last_name }}</td>
+                    <td>{{ record.phone }}</td>
+                    <td>{{ record.source }}</td>
+                    <td>
+                        {% if record.status == 'זומן' %}
+                            <span class="badge badge-primary">{{ record.status }}</span>
+                        {% elif record.status == 'התקבל' %}
+                            <span class="badge badge-success">{{ record.status }}</span>
+                        {% elif record.status == 'לא התקבל' %}
+                            <span class="badge badge-danger">{{ record.status }}</span>
+                        {% elif record.status == 'הסיר מועמדות' %}
+                            <span class="badge badge-secondary">{{ record.status }}</span>
+                        {% elif record.status == 'פסל' %}
+                            <span class="badge badge-warning">{{ record.status }}</span>
+                        {% elif record.status == 'מבדק אמינות' %}
+                            <span class="badge badge-info">{{ record.status }}</span>
+                        {% elif record.status == 'קבט' %}
+                            <span class="badge badge-dark">{{ record.status }}</span>
+                        {% else %}
+                            <span class="badge badge-light">{{ record.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ record.date_of_interview|date:"d/m/y" }}</td>
+                    <td>{{ record.hour_of_interview|time:"H:i" }}</td>
+                    <td>{{ record.notes }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+<div class="col-md-6 offset-md-3">
+    <h1>Index</h1>
+    <br/>
+    <form method="POST" action="{% url 'Home' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" class="form-control" name="user_name" placeholder="שם משתמש" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="password" placeholder="סיסמה" required>
+        </div>
+        <button type="submit" class="btn btn-primary">כניסה</button>
+    </form>
 {% endif %}
 
 {% endblock %}
