@@ -14,12 +14,20 @@
 </style>
 
 <div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
-    <h1>פרטי מועמד</h1>
+    <strong><h2>פרטי מועמד</h2></strong>
 </div>
+
+<td><a class="btn btn-info" href="{% url 'edit_record' costumer_record.id %}">
+    <i class="bi bi-pencil"></i>
+    עריכה
+    </a></td>
+  <a href="{% url 'Home' %}" class="btn btn-secondary">עמוד ראשי</a>
+  <a href="{% url 'delete_record' costumer_record.id %}" class="btn btn-danger">מחיקה</a>
+  <br></br>
 
 <div class="card" style="width: 18rem;">
     <div class="card-header">
-      פרטי מועמד:
+      <strong>פרטי מועמד:</strong>
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>מסד:</strong> {{ costumer_record.id }}</li>
@@ -45,15 +53,12 @@
                 <span class="badge badge-light">{{ costumer_record.status }}</span>
             {% endif %}
         </li>
-        <li class="list-group-item"><strong>תאריך ראיון:</strong> {{ costumer_record.date_of_interview }}</li>
-        <li class="list-group-item"><strong>שעת ראיון:</strong> {{ costumer_record.hour_of_interview }}</li>
+        <li class="list-group-item"><strong>תאריך ראיון:</strong> {{ costumer_record.date_of_interview }} </li>
+        <li class="list-group-item"><strong>שעת ראיון:</strong> {{ costumer_record.hour_of_interview }} </li>
+        <li class="list-group-item"><strong>הערות:</strong> {{ costumer_record.notes }} </li>
         
     </ul>
   </div>
-<br/>
-  <a href="{% url 'Home' %}" class="btn btn-secondary">עמוד ראשי</a>
-
-  <a href="{% url 'delete_record' costumer_record.id %}" class="btn btn-danger">מחיקה</a>
 
 {% comment "" %}{{ costumer_record.id }} </br>
 {{ costumer_record.first_name }} {{ record.last_name }} </br>

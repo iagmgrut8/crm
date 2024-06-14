@@ -1,5 +1,7 @@
 from django import forms
 from django.db import models
+import csv
+from django.http import HttpResponse
 
 status_choices = (
     ('זומן', 'זומן'),
@@ -39,3 +41,22 @@ class Record(models.Model):
 
     def __str__(self):
         return f"{self.id} {self.first_name} {self.last_name} {self.phone} {self.source} {self.status} {self.date_of_interview} {self.hour_of_interview} {self.notes}"
+
+import csv
+from django.http import HttpResponse
+
+def export_csv(request):
+    # Retrieve your data (e.g., from the Record model)
+    records = Record.objects.all()
+
+    # Create a CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="records.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['First Name', 'Last Name', 'Phone', ...])  # Add column headers
+
+    for record in records:
+        writer.writerow([record.first_name, record.last_name, record.phone, ...])  # Add data rows
+
+    return response

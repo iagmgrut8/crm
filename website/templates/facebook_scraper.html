@@ -1,0 +1,14 @@
+<!-- facebook_scraper.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Facebook Posts Scraped</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <p>Date: {{ post.date }}</p>
+                <p><a href="{{ post.link }}" target="_blank">{{ post.link }}</a></p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

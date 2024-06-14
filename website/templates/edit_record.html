@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
+    <h1>עריכה</h1>
+</div>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-warning btn-rounded" data-mdb-ripple-init>שמור שינויים</button>
+
+    <a href="{% url 'Home' %}" type="button" class="btn btn-dark btn-rounded" data-mdb-ripple-init>עמוד ראשי</a>    
+</form>
+{% endblock %}

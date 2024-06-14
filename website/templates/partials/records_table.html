@@ -1,0 +1,58 @@
+<!-- records_table.html -->
+<table class="table table-light table-hover table-bordered custom-table">
+
+    <thead>
+        <tr>
+            <th scope="col"><a class="link-light" href="?sort_by=id">#</a></th>
+            <th scope="col"><a class="link-light" href="?sort_by=first_name">שם מועמד</a></th>
+            <th scope="col"><a class="link-light" href="?sort_by=phone">טלפון</a></th>
+            <th scope="col">מקור גיוס</th>
+            <th scope="col">סטטוס</th>
+            <th scope="col"><a class="link-light" href="?sort_by=date_of_interview">מועד ראיון</a></th>
+            <th scope="col">שעת ראיון</th>
+            <th scope="col">הערות</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {% for record in records %}
+            <tr>
+                <td>
+                    <a class="icon-link" href="{% url 'record' record.id %}">
+                        <i class="bi bi-person"></i>
+                        <svg class="bi" aria-hidden="true"><use xlink:href="#box-seam"></use></svg>
+                        {{ record.id }}
+                    </a>
+                </td>
+                <td>{{ record.first_name }} {{ record.last_name }}</td>
+                <td>{{ record.phone }}</td>
+                <td>{{ record.source }}</td>
+                <td>
+                    {% if record.status == 'זומן' %}
+                        <span class="badge badge-primary">{{ record.status }}</span>
+                    {% elif record.status == 'התקבל' %}
+                        <span class="badge badge-success">{{ record.status }}</span>
+                    {% elif record.status == 'לא התקבל' %}
+                        <span class="badge badge-danger">{{ record.status }}</span>
+                    {% elif record.status == 'הסיר מועמדות' %}
+                        <span class="badge badge-secondary">{{ record.status }}</span>
+                    {% elif record.status == 'פסל' %}
+                        <span class="badge badge-warning">{{ record.status }}</span>
+                    {% elif record.status == 'מבדק אמינות' %}
+                        <span class="badge badge-info">{{ record.status }}</span>
+                    {% elif record.status == 'קבט' %}
+                        <span class="badge badge-dark">{{ record.status }}</span>
+                    {% else %}
+                        <span class="badge badge-light">{{ record.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ record.date_of_interview|date:"d/m/y" }}</td>
+                <td>{{ record.hour_of_interview|time:"H:i" }}</td>
+                <td>{{ record.notes }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">לא נמצאו רשומות</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

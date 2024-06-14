@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <style>
     .text-right {
         text-align: right;
@@ -29,66 +28,75 @@
     .badge-dark { background-color: #343a40; }
     .badge { color: white; padding: 0.5em 0.75em; border-radius: 0.25em; }
 
+    .search-field {
+        width: 300px; /* Adjust the width as needed */
+    }
 </style>
 
 {% if user.is_authenticated %}
+
 <div class="shadow p-3 mb-5 text-primary-emphasis bg-light-subtle border border-light-subtle rounded-3">
     <h1>רשימת מועמדים</h1>
 </div>
-<br/>
-    <table class="table table-light table-hover table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">שם מועמד</th>
-                <th scope="col">טלפון</th>
-                <th scope="col">מקור גיוס</th>
-                <th scope="col">סטטוס</th>
-                <th scope="col">מועד ראיון</th>
-                <th scope="col">שעת ראיון</th>
-                <th scope="col">הערות</th>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-            {% for record in records %}
-                <tr>
-                    <td><a class="icon-link" href="{% url 'record' record.id %}">
-                        <i class="bi bi-person"></i>
-                        <svg class="bi" aria-hidden="true"><use xlink:href="#box-seam"></use></svg>
-                        {{ record.id }}
-                      </a></td>
-                    {% comment %}
-                   <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
-                    {% endcomment %}
-                    <td>{{ record.first_name }} {{ record.last_name }}</td>
-                    <td>{{ record.phone }}</td>
-                    <td>{{ record.source }}</td>
-                    <td>
-                        {% if record.status == 'זומן' %}
-                            <span class="badge badge-primary">{{ record.status }}</span>
-                        {% elif record.status == 'התקבל' %}
-                            <span class="badge badge-success">{{ record.status }}</span>
-                        {% elif record.status == 'לא התקבל' %}
-                            <span class="badge badge-danger">{{ record.status }}</span>
-                        {% elif record.status == 'הסיר מועמדות' %}
-                            <span class="badge badge-secondary">{{ record.status }}</span>
-                        {% elif record.status == 'פסל' %}
-                            <span class="badge badge-warning">{{ record.status }}</span>
-                        {% elif record.status == 'מבדק אמינות' %}
-                            <span class="badge badge-info">{{ record.status }}</span>
-                        {% elif record.status == 'קבט' %}
-                            <span class="badge badge-dark">{{ record.status }}</span>
-                        {% else %}
-                            <span class="badge badge-light">{{ record.status }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ record.date_of_interview|date:"d/m/y" }}</td>
-                    <td>{{ record.hour_of_interview|time:"H:i" }}</td>
-                    <td>{{ record.notes }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<div class="text-right mb-3">
+    <a class="btn btn-success" href="{% url 'add_record' %}">
+        <i class="bi bi-person-plus-fill"></i>
+        רישום מועמד
+    </a>
+
+    <a class="btn btn-info" href="{% url 'export_csv' %}">
+        <i class="bi bi-cloud-download"></i>
+        CSV
+    </a>
+</div>
+
+<div class="text-right mb-3">
+    <form id="search-form" method="get" action="{% url 'search_records' %}" class="d-flex">
+        <input type="text" value="{{ request.GET.q }}" name="q" class="form-control search-field mr-2" placeholder="חיפוש..." id="search-field" />
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i> חפש
+        </button>
+    </form>
+</div>
+
+<div id="table-container">
+    {% include 'partials/records_table.html' %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search-form').on('submit', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            var url = form.attr('action'); // Ensure the action attribute points to the correct URL
+            var params = form.serialize(); // Serialize form data
+    
+            console.log("Sending AJAX request to:", url + '?' + params);
+    
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: params,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                },
+                success: function(response) {
+                    console.log("Response received:", response);
+                    $('#table-container').html(response); // Replace table container content with response HTML
+                    console.log("Table container updated");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Request failed. Status:", status, "Error:", error);
+                }
+            });
+        });
+    });
+    
+</script>
+
+
 {% else %}
 <div class="col-md-6 offset-md-3">
     <h1>Index</h1>
@@ -103,6 +111,7 @@
         </div>
         <button type="submit" class="btn btn-primary">כניסה</button>
     </form>
+</div>
 {% endif %}
 
 {% endblock %}

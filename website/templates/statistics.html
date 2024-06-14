@@ -1,0 +1,28 @@
+<!-- statistics.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="width: 80%; margin: auto;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',  // You can change this to 'line', 'pie', etc. as needed
+                data: {
+                    labels: {{ labels|safe }},
+                    datasets: {{ datasets|safe }},
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
